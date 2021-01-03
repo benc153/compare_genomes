@@ -173,7 +173,6 @@ def main():
 	print("length in codons    number of matches")
 	a, b = [load(f) for f in args.genome]
 
-
 	if args.amino_acids:
 		compare_aa(a, b)
 	else:
