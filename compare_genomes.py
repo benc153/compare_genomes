@@ -113,7 +113,7 @@ def subsequences(genome, n_codons):
 			yield result
 
 
-def search(genome, sequence):
+def search(genome, sequence, verbose=False):
 	"""Returns the number of matches"""
 	n = len(sequence)
 	ret = 0
@@ -121,6 +121,9 @@ def search(genome, sequence):
 	while True:
 		pos = genome.find(sequence)
 		if pos == -1: break
+
+		if verbose:
+			print("Match {} nt long at {}".format(len(sequence), pos))
 
 		ret += 1
 		genome = genome[pos+n:]
@@ -140,23 +143,23 @@ def convert_to_aa(genome):
 	return "".join(ret)
 
 
-def compare(a, b):
+def compare(a, b, verbose):
 	for n_codons in range(4, 50):
 		count = 0
 		for ss in subsequences(a, n_codons):
-			n_matches = search(b, ss)
+			n_matches = search(b, ss, verbose)
 			count += n_matches
 		print(n_codons, count)
 		if count == 0: break
 
 
-def compare_aa(a, b):
+def compare_aa(a, b, verbose):
 	"""Compare amino acids rather than bases"""
 	b = convert_to_aa(b)
 	for n_codons in range(4, 50):
 		count = 0
 		for ss in subsequences(a, n_codons):
-			n_matches = search(b, convert_to_aa(ss))
+			n_matches = search(b, convert_to_aa(ss), verbose)
 			count += n_matches
 		print(n_codons, count)
 		if count == 0: break
@@ -167,6 +170,7 @@ def main():
 	ap.add_argument("genome", nargs=2)
 	ap.add_argument('-a', "--amino-acids", action="store_true",
 			help="Compare by amino acids")
+	ap.add_argument('-v', "--verbose", action="store_true")
 	args = ap.parse_args()
 
 	print("{} vs {}".format(*args.genome))
@@ -174,9 +178,9 @@ def main():
 	a, b = [load(f) for f in args.genome]
 
 	if args.amino_acids:
-		compare_aa(a, b)
+		compare_aa(a, b, args.verbose)
 	else:
-		compare(a, b)
+		compare(a, b, args.verbose)
 
 
 if __name__ == "__main__":
