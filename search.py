@@ -8,6 +8,7 @@ def main():
 	ap = ArgumentParser()
 	ap.add_argument("haystacks", nargs="+")
 	ap.add_argument("-t", "--needle", type=str)
+	ap.add_argument("-v", "--verbose", action="store_true")
 
 	args = ap.parse_args()
 
@@ -15,7 +16,7 @@ def main():
 
 	for h in args.haystacks:
 		genome = load(h)
-		n = search(genome, term)
+		n = search(genome, term, args.verbose)
 		print("{}: {}".format(h, n))
 
 

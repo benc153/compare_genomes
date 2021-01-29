@@ -117,15 +117,18 @@ def search(genome, sequence, verbose=False):
 	"""Returns the number of matches"""
 	n = len(sequence)
 	ret = 0
+	offset = 0
 
 	while True:
 		pos = genome.find(sequence)
 		if pos == -1: break
 
 		if verbose:
-			print("Match {} nt long at {}".format(len(sequence), pos))
+			print("Match {} nt long at {}".format(len(sequence), pos + offset))
 
 		ret += 1
+
+		offset += pos + n
 		genome = genome[pos+n:]
 
 	return ret
